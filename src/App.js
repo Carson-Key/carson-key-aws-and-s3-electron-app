@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import './App.css';
+import './assets/main.css'
+
 const { ipcRenderer } = window.require('electron');
 
 function App() {
@@ -19,12 +20,16 @@ function App() {
 
   return (
     <div>
-      <input
-        onChange={(event) => {setAwsProfile(event.target.value)}}
-        placeholder={"AWS Profile"}
-      />
-      <button onClick={handleSetAWSProfile}>submit</button>
-      <button onClick={() => {ipcRenderer.send('getS3Buckets', awsProfile)}}>s3</button>
+      <div className="mt-4 mx-3">
+        <input
+          onChange={(event) => {setAwsProfile(event.target.value)}}
+          placeholder={"AWS Profile"}
+        />
+        <button className="bg-blue-400 text-white mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
+      </div>
+      <div className="mt-4 mx-3">
+        <button className="bg-blue-400 text-white px-3 py-1 rounded" onClick={() => {ipcRenderer.send('getS3Buckets', awsProfile)}}>s3</button>
+      </div>
     </div>
   );
 }
