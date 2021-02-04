@@ -90,7 +90,7 @@ ipcMain.on('uploadFileToS3', (event, arg) => {
 
     // call S3 to retrieve upload file to specified bucket
     var uploadParams = {Bucket: 'cs493-aws-cli', Key: '', Body: ''};
-    var file = __dirname + "/../" + arg;
+    var file = __dirname + "/../" + arg.filePath;
 
     // Configure the file stream and obtain the upload parameters
     var fileStream = fs.createReadStream(file);
@@ -98,7 +98,11 @@ ipcMain.on('uploadFileToS3', (event, arg) => {
         event.reply('uploadFileToS3-reply', err);
     });
     uploadParams.Body = fileStream;
-    uploadParams.Key = path.basename(file);
+    if (arg.fileName === "") {
+        uploadParams.Key = path.basename(file);
+    } else {
+        uploadParams.Key = arg.fileName
+    }
 
     // call S3 to retrieve upload file to specified bucket
     s3.upload (uploadParams, (err, data) => {
