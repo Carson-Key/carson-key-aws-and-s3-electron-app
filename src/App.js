@@ -5,6 +5,7 @@ const { ipcRenderer } = window.require('electron');
 
 function App() {
   const [awsProfile, setAwsProfile] = useState("")
+  const [filePath, setFilePath] = useState("")
   const [awsProfileReturned, setAwsProfileReturned] = useState("defualt")
 
   const handleSetAWSProfile = () => {
@@ -13,10 +14,18 @@ function App() {
       ipcRenderer.send('getAWSProfile')
     }
   }
+  const handleS3FileUpload = () => {
+    if (filePath !== "") {
+      ipcRenderer.send('uploadFileToS3', filePath)
+    }
+  }
 
   useEffect(() => {
     ipcRenderer.on('getAWSProfile-reply', (event, arg) => {
       setAwsProfileReturned(arg)
+    })
+    ipcRenderer.on('uploadFileToS3-reply', (event, arg) => {
+      console.log(arg)
     })
   }, [])
 
@@ -32,13 +41,22 @@ function App() {
           <div className="mt-4 mx-3">
             <p>Set AWS Profile Used</p>
             <input
+              id="awsProfile"
+              className="text-black px-2"
               onChange={(event) => {setAwsProfile(event.target.value)}}
-              placeholder={"AWS Profile"}
+              placeholder="AWS Profile"
             />
             <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
           </div>
           <div className="mt-4 mx-3">
-            <button className="bg-blue-400 px-3 py-1 rounded" onClick={() => {ipcRenderer.send('getAWSProfile', awsProfile)}}>Profile</button>
+            <p>Path of File to upload to S3 (assume from root of project)</p>
+            <input
+              id="filePath"
+              className="text-black px-2"
+              onChange={(event) => {setFilePath(event.target.value)}}
+              placeholder="Filepath"
+            />
+            <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleS3FileUpload}>submit</button>
           </div>
         </div>
       </div>

@@ -1,9 +1,10 @@
 const electron = require('electron');
+const path = require('path');
 // Might Use later
-// const path = require('path');
 // const url = require('url');
 const { ipcMain } = require('electron')
 var AWS = require("aws-sdk");
+var fs = require('fs');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -79,6 +80,32 @@ ipcMain.on('setAWSCreds', (event, arg) => {
         }
         else {
             event.reply('setAWSCreds-reply', AWS.config.credentials.accessKeyId)
+        }
+    });
+})
+
+// upload to s3
+ipcMain.on('uploadFileToS3', (event, arg) => {
+    let s3 = new AWS.S3({apiVersion: '2006-03-01'});
+
+    // call S3 to retrieve upload file to specified bucket
+    var uploadParams = {Bucket: 'cs493-aws-cli', Key: '', Body: ''};
+    var file = __dirname + "/../" + arg;
+
+    // Configure the file stream and obtain the upload parameters
+    var fileStream = fs.createReadStream(file);
+    fileStream.on('error', (err) => {
+        event.reply('uploadFileToS3-reply', err);
+    });
+    uploadParams.Body = fileStream;
+    uploadParams.Key = path.basename(file);
+
+    // call S3 to retrieve upload file to specified bucket
+    s3.upload (uploadParams, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3-reply', err);
+        } if (data) {
+            event.reply('uploadFileToS3-reply', "Upload Success: " + data.Location);
         }
     });
 })
