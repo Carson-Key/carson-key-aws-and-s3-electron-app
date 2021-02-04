@@ -41,7 +41,7 @@ ipcMain.on('getAWSAccessKey', (event, arg) => {
         if (err) console.log(err.stack);
             // credentials not loaded
         else {
-            event.reply('getAWSCreds-reply', AWS.config.credentials.accessKeyId)
+            event.reply('getAWSAccessKey-reply', AWS.config.credentials.accessKeyId)
         }
     });
 })
@@ -50,7 +50,7 @@ ipcMain.on('getAWSProfile', (event, arg) => {
         if (err) console.log(err.stack);
             // credentials not loaded
         else {
-            event.reply('getAWSCreds-reply', AWS.config.credentials.accessKeyId)
+            event.reply('getAWSProfile-reply', AWS.config.credentials.accessKeyId)
         }
     });
 })
