@@ -7,7 +7,9 @@ function App() {
   const [awsProfile, setAwsProfile] = useState("")
   const [filePath, setFilePath] = useState("")
   const [fileName, setFileName] = useState("")
+  const [fileNameTwo, setFileNameTwo] = useState("")
   const [awsProfileReturned, setAwsProfileReturned] = useState("defualt")
+  const [file, setFile] = React.useState("");
 
   const handleSetAWSProfile = () => {
     if (awsProfile !== "") {
@@ -18,6 +20,14 @@ function App() {
   const handleS3FileUpload = () => {
     if (filePath !== "") {
       ipcRenderer.send('uploadFileToS3', {filePath: filePath, fileName: fileName})
+    }
+  }
+  function handleUpload(event) {
+    setFile(event.target.files[0]);
+  }
+  const handleChooseFileUpload = () => {
+    if (file !== "") {
+      ipcRenderer.send('uploadFileToS3Choose', {filePath: file.path, fileName: fileNameTwo})
     }
   }
 
@@ -70,6 +80,23 @@ function App() {
               />
             </div>
             <button className="bg-blue-400 ml-4 px-3 py-1 rounded" onClick={handleS3FileUpload}>submit</button>
+          </div>
+          <div className="mt-4 mx-3">
+            <p className="mb-4">Upload MP3 to S3</p>
+            <div className="ml-4 mb-6">
+              <p>New File Name For s3 (leave blank to keep original file name)</p>
+              <input
+                id="fileNameTwo"
+                className="text-black px-2"
+                onChange={(event) => {setFileNameTwo(event.target.value)}}
+                placeholder="Name"
+              />
+            </div>
+            <div className="ml-4 mb-6">
+              <p>choose MP3 File</p>
+              <input type="file" onChange={handleUpload} />
+            </div>
+            <button className="bg-blue-400 ml-4 px-3 py-1 rounded" onClick={handleChooseFileUpload}>submit</button>
           </div>
         </div>
       </div>
