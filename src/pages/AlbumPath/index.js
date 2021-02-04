@@ -16,7 +16,7 @@ function AlbumPath() {
         <div className="mt-4 mx-3">
             <p className="mb-4">Upload Album to S3</p>
             <div className="ml-4 mb-6">
-                <p>New Folder Name For s3 (leave blank to keep original file name)</p>
+                <p>New Folder Name For s3</p>
                 <input
                     id="fileName"
                     className="text-black px-2"

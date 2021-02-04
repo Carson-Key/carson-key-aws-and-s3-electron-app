@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 const { ipcRenderer } = window.require('electron');
 
-function AlbumChoose() {
+function ArtistChoose() {
     const [folderName, setFolderName] = useState("")
     const [folderPath, setFolderPath] = useState("")
 
@@ -17,7 +17,7 @@ function AlbumChoose() {
 
     return (
         <div className="mt-4 mx-3">
-            <p className="mb-4">Upload Album to S3</p>
+            <p className="mb-4">Upload Artist to S3</p>
             <div className="ml-4 mb-6">
                 <p>New Folder Name For s3</p>
                 <input
@@ -36,4 +36,4 @@ function AlbumChoose() {
     )
 }
 
-export default AlbumChoose
+export default ArtistChoose

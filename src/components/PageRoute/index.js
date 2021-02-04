@@ -5,6 +5,8 @@ import ChooseFile from '../../pages/ChooseFile'
 import Details from '../../pages/Details'
 import AlbumPath from '../../pages/AlbumPath'
 import AlbumChoose from '../../pages/AlbumChoose'
+import ArtistPath from '../../pages/ArtistPath'
+import ArtistChoose from '../../pages/ArtistChoose'
 
 function PageRoute() {
     const [currentPage, setCurrentPage] = useState("SetAWSProfile")
@@ -21,6 +23,10 @@ function PageRoute() {
             setCurrentPageComponent(<AlbumPath />)
         } else if (currentPage === "UploadAlbumChoose") {
             setCurrentPageComponent(<AlbumChoose />)
+        } else if (currentPage === "UploadArtistPath") {
+            setCurrentPageComponent(<ArtistPath />)
+        } else if (currentPage === "UploadArtistChoose") {
+            setCurrentPageComponent(<ArtistChoose />)
         } else {
             setCurrentPageComponent(<SetAWSProfile />)
         }
@@ -41,6 +47,10 @@ function PageRoute() {
                     <button onClick={() => {setCurrentPage("UploadAlbumPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Album (Path)</button>
                     <br />
                     <button onClick={() => {setCurrentPage("UploadAlbumChoose")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Album (Choose)</button>
+                    <br />
+                    <button onClick={() => {setCurrentPage("UploadArtistPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Artist (Path)</button>
+                    <br />
+                    <button onClick={() => {setCurrentPage("UploadArtistChoose")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Artist (Choose)</button>
                 </div>
             </div>
             <div>
