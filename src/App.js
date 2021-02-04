@@ -1,41 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import SetAWSProfile from './pages/SetAWSProfile'
+import ChooseFilePath from './pages/ChooseFilePath'
+import ChooseFile from './pages/ChooseFile'
+import Details from './pages/Details'
 import './assets/main.css'
 
 const { ipcRenderer } = window.require('electron');
 
 function App() {
-  const [awsProfile, setAwsProfile] = useState("")
-  const [filePath, setFilePath] = useState("")
-  const [fileName, setFileName] = useState("")
-  const [fileNameTwo, setFileNameTwo] = useState("")
-  const [awsProfileReturned, setAwsProfileReturned] = useState("defualt")
-  const [file, setFile] = React.useState("");
-
-  const handleSetAWSProfile = () => {
-    if (awsProfile !== "") {
-      ipcRenderer.send('setAWSCreds', awsProfile)
-      ipcRenderer.send('getAWSProfile')
-    }
-  }
-  const handleS3FileUpload = () => {
-    if (filePath !== "") {
-      ipcRenderer.send('uploadFileToS3', {filePath: filePath, fileName: fileName})
-    }
-  }
-  function handleUpload(event) {
-    setFile(event.target.files[0]);
-  }
-  const handleChooseFileUpload = () => {
-    if (file !== "") {
-      ipcRenderer.send('uploadFileToS3Choose', {filePath: file.path, fileName: fileNameTwo})
-    }
-  }
 
   useEffect(() => {
     ipcRenderer.on('getAWSProfile-reply', (event, arg) => {
-      setAwsProfileReturned(arg)
+      console.log("changed profile to: " + arg)
     })
     ipcRenderer.on('uploadFileToS3-reply', (event, arg) => {
+      console.log(arg)
+    })
+    ipcRenderer.on('uploadFileToS3Choose-reply', (event, arg) => {
       console.log(arg)
     })
   }, [])
@@ -44,60 +25,12 @@ function App() {
     <div className="bg-gray-800 w-screen h-screen top-0 absolute text-white">
       <div className="flex justify-around">
         <div className="mt-4">
-          <div>
-            <p className="font-bold">Current AWS Profile:</p><p className="ml-4">{" " + awsProfileReturned}</p>
-          </div>
+          <Details />
         </div>
         <div>
-          <div className="mt-4 mx-3">
-            <p>Set AWS Profile Used</p>
-            <input
-              id="awsProfile"
-              className="text-black px-2 ml-4"
-              onChange={(event) => {setAwsProfile(event.target.value)}}
-              placeholder="AWS Profile"
-            />
-            <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
-          </div>
-          <div className="mt-4 mx-3">
-            <p className="mb-4">Upload MP3 to S3</p>
-            <div className="ml-4 mb-6">
-              <p>New File Name For s3 (leave blank to keep original file name)</p>
-              <input
-                id="fileName"
-                className="text-black px-2"
-                onChange={(event) => {setFileName(event.target.value)}}
-                placeholder="Name"
-              />
-            </div>
-            <div className="ml-4 mb-6">
-              <p>Path of MP3 (assume from root of project)</p>
-              <input
-                id="filePath"
-                className="text-black px-2"
-                onChange={(event) => {setFilePath(event.target.value)}}
-                placeholder="Filepath"
-              />
-            </div>
-            <button className="bg-blue-400 ml-4 px-3 py-1 rounded" onClick={handleS3FileUpload}>submit</button>
-          </div>
-          <div className="mt-4 mx-3">
-            <p className="mb-4">Upload MP3 to S3</p>
-            <div className="ml-4 mb-6">
-              <p>New File Name For s3 (leave blank to keep original file name)</p>
-              <input
-                id="fileNameTwo"
-                className="text-black px-2"
-                onChange={(event) => {setFileNameTwo(event.target.value)}}
-                placeholder="Name"
-              />
-            </div>
-            <div className="ml-4 mb-6">
-              <p>choose MP3 File</p>
-              <input type="file" onChange={handleUpload} />
-            </div>
-            <button className="bg-blue-400 ml-4 px-3 py-1 rounded" onClick={handleChooseFileUpload}>submit</button>
-          </div>
+          <SetAWSProfile />
+          <ChooseFilePath />
+          <ChooseFile />
         </div>
       </div>
     </div>
