@@ -37,16 +37,6 @@ app.on('activate', function () {
 });
 
 // getters
-ipcMain.on('getAWSAccessKey', (event, arg) => {
-    AWS.config.getCredentials(function(err) {
-        if (err) {
-            event.reply('getAWSAccessKey-reply', err.stack);
-        }
-        else {
-            event.reply('getAWSAccessKey-reply', AWS.config.credentials.accessKeyId)
-        }
-    });
-})
 ipcMain.on('getAWSProfile', (event, arg) => {
     AWS.config.getCredentials(function(err) {
         if (err) {
@@ -54,18 +44,6 @@ ipcMain.on('getAWSProfile', (event, arg) => {
         }
         else {
             event.reply('getAWSProfile-reply', AWS.config.credentials.profile)
-        }
-    });
-})
-
-ipcMain.on('getS3Buckets', (event, arg) => {
-    let s3 = new AWS.S3({apiVersion: '2006-03-01'});
-
-    s3.listBuckets(function(err, data) {
-        if (err) {
-            event.reply('getS3Buckets-reply', err);
-        } else {
-            event.reply('getS3Buckets-reply', data.Buckets);
         }
     });
 })
