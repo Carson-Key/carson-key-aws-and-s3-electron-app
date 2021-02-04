@@ -3,6 +3,7 @@ const electron = require('electron');
 // const path = require('path');
 // const url = require('url');
 const { ipcMain } = require('electron')
+var AWS = require("aws-sdk");
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -33,11 +34,21 @@ app.on('activate', function () {
 });
 
 ipcMain.on('asynchronous-message', (event, arg) => {
-  console.log(arg) // prints "ping"
-  event.reply('asynchronous-reply', 'async pong')
+    console.log(arg) // prints "ping"
+    event.reply('asynchronous-reply', 'async pong')
 })
 
 ipcMain.on('synchronous-message', (event, arg) => {
-  console.log(arg) // prints "ping"
-  event.returnValue = 'sync pong'
+    console.log(arg) // prints "ping"
+    event.returnValue = 'sync pong'
+})
+
+ipcMain.on('getAWSCreds', (event, arg) => {
+    AWS.config.getCredentials(function(err) {
+        if (err) console.log(err.stack);
+            // credentials not loaded
+        else {
+            event.reply('getAWSCreds-reply', AWS.config.credentials.accessKeyId)
+        }
+    });
 })

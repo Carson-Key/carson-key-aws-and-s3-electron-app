@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import logo from './logo.svg';
 import './App.css';
 const { ipcRenderer } = window.require('electron');
 
 function App() {
-  console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+
+  useEffect(() => {
+    ipcRenderer.on('getAWSCreds-reply', (event, arg) => {
+      console.log(arg)
+    })
+  })
 
   return (
     <div className="App">
@@ -14,10 +19,7 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <button onClick={() => {
-          ipcRenderer.on('asynchronous-reply', (event, arg) => {
-            console.log(arg) // prints "pong"
-          })
-          ipcRenderer.send('asynchronous-message', 'ping')
+          ipcRenderer.send('getAWSCreds')
         }}>Test</button>
       </header>
     </div>
