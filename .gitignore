@@ -21,6 +21,11 @@ src/assets/main.css
 .env.test.local
 .env.production.local
 
+# test files
+album-test
+artist-test
+sample.mp3
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
