@@ -1,7 +1,11 @@
+import React from 'react'
 import logo from './logo.svg';
 import './App.css';
+const { ipcRenderer } = window.require('electron');
 
 function App() {
+  console.log(ipcRenderer.sendSync('synchronous-message', 'ping')) // prints "pong"
+
   return (
     <div className="App">
       <header className="App-header">
@@ -9,14 +13,12 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button onClick={() => {
+          ipcRenderer.on('asynchronous-reply', (event, arg) => {
+            console.log(arg) // prints "pong"
+          })
+          ipcRenderer.send('asynchronous-message', 'ping')
+        }}>Test</button>
       </header>
     </div>
   );

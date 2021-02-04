@@ -1,25 +1,16 @@
-var AWS = require("aws-sdk");
 const electron = require('electron');
 // Might Use later
 // const path = require('path');
 // const url = require('url');
-
+const { ipcMain } = require('electron')
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-AWS.config.getCredentials(function(err) {
-  if (err) console.log(err.stack);
-    // credentials not loaded
-  else {
-    console.log("Access key:", AWS.config.credentials.accessKeyId);
-  }
-});
-
 let mainWindow;
 
 function createWindow() {
-    mainWindow = new BrowserWindow({width: 800, height: 600});
+    mainWindow = new BrowserWindow({width: 800, height: 600, webPreferences: {nodeIntegration: true}});
     mainWindow.loadURL('http://localhost:3000');
     mainWindow.webContents.openDevTools();
 
@@ -40,3 +31,13 @@ app.on('activate', function () {
         createWindow()
     }
 });
+
+ipcMain.on('asynchronous-message', (event, arg) => {
+  console.log(arg) // prints "ping"
+  event.reply('asynchronous-reply', 'async pong')
+})
+
+ipcMain.on('synchronous-message', (event, arg) => {
+  console.log(arg) // prints "ping"
+  event.returnValue = 'sync pong'
+})
