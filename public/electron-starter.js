@@ -35,17 +35,8 @@ app.on('activate', function () {
     }
 });
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log(arg) // prints "ping"
-    event.reply('asynchronous-reply', 'async pong')
-})
-
-ipcMain.on('synchronous-message', (event, arg) => {
-    console.log(arg) // prints "ping"
-    event.returnValue = 'sync pong'
-})
-
-ipcMain.on('getAWSCreds', (event, arg) => {
+// getters
+ipcMain.on('getAWSAccessKey', (event, arg) => {
     AWS.config.getCredentials(function(err) {
         if (err) console.log(err.stack);
             // credentials not loaded
@@ -54,15 +45,12 @@ ipcMain.on('getAWSCreds', (event, arg) => {
         }
     });
 })
-
-ipcMain.on('setAWSCreds', (event, arg) => {
-    var credentials = new AWS.SharedIniFileCredentials({profile: arg});
-    AWS.config.credentials = credentials;
+ipcMain.on('getAWSProfile', (event, arg) => {
     AWS.config.getCredentials(function(err) {
         if (err) console.log(err.stack);
             // credentials not loaded
         else {
-            event.reply('setAWSCreds-reply', AWS.config.credentials.accessKeyId)
+            event.reply('getAWSCreds-reply', AWS.config.credentials.accessKeyId)
         }
     });
 })
@@ -75,6 +63,19 @@ ipcMain.on('getS3Buckets', (event, arg) => {
             event.reply('getS3Buckets-reply', err);
         } else {
             event.reply('getS3Buckets-reply', data.Buckets);
+        }
+    });
+})
+
+// setters
+ipcMain.on('setAWSCreds', (event, arg) => {
+    var credentials = new AWS.SharedIniFileCredentials({profile: arg});
+    AWS.config.credentials = credentials;
+    AWS.config.getCredentials(function(err) {
+        if (err) console.log(err.stack);
+            // credentials not loaded
+        else {
+            event.reply('setAWSCreds-reply', AWS.config.credentials.accessKeyId)
         }
     });
 })
