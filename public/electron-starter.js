@@ -208,3 +208,41 @@ ipcMain.on('uploadAlbumToS3Choose', (event, arg) => {
         }
     })
 })
+
+ipcMain.on('uploadArtistToS3', (event, arg) => {
+    let s3 = new AWS.S3({apiVersion: '2006-03-01'});
+    var artist = arg.folderPath;
+    let artistName = arg.folderName
+
+    fs.readdirSync(artist).forEach(originalFolderName => {
+        let folderName = artist + "/" + originalFolderName
+        fs.readdirSync(folderName).forEach(fileName => {
+            let fileType = path.extname(fileName)
+
+            if (fileType !== ".mp3") {
+                event.reply('uploadFileToS3Choose-reply', 'Please give a mp3 file, not a: ' + fileType);
+            } else {
+                // call S3 to retrieve upload file to specified bucket
+                var uploadParams = {Bucket: 'cs493-aws-cli', Key: '', Body: ''};
+
+                // Configure the file stream and obtain the upload parameters
+                var fileStream = fs.createReadStream(folderName + "/" + fileName);
+                fileStream.on('error', (err) => {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                });
+
+                uploadParams.Body = fileStream;
+                uploadParams.Key = artistName + "/" + originalFolderName + "/" + path.basename(fileName);
+
+                // call S3 to retrieve upload file to specified bucket
+                s3.upload (uploadParams, (err, data) => {
+                    if (err) {
+                        event.reply('uploadFileToS3Choose-reply', err);
+                    } if (data) {
+                        event.reply('uploadFileToS3Choose-reply', "Upload Success: " + data.Location);
+                    }
+                });
+            }
+        })
+    })
+})

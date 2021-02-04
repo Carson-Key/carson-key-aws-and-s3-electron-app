@@ -8,7 +8,7 @@ function ArtistPath() {
 
     const handleS3FolderUpload = () => {
         if (folderPath !== "" && folderName !== "") {
-            ipcRenderer.send('uploadAlbumToS3', {folderPath: folderPath, folderName: folderName})
+            ipcRenderer.send('uploadArtistToS3', {folderPath: folderPath, folderName: folderName})
         }
     }
 
