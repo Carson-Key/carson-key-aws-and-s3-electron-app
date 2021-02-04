@@ -16,6 +16,9 @@ function App() {
     ipcRenderer.on('uploadFileToS3Choose-reply', (event, arg) => {
       console.log(arg)
     })
+    ipcRenderer.on('uploadAlbumToS3-reply', (event, arg) => {
+      console.log(arg)
+    })
   }, [])
 
   return (
