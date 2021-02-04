@@ -28,9 +28,9 @@ function PageRoute() {
                     <p className="font-bold mt-4 mb-1">Navigation</p>
                     <button onClick={() => {setCurrentPage("SetAWSProfile")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Set AWS Profile</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload File (Path)</button>
+                    <button onClick={() => {setCurrentPage("UploadPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload MP3 (Path)</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadFile")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload File (Choose)</button>
+                    <button onClick={() => {setCurrentPage("UploadFile")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload MP3 (Choose)</button>
                 </div>
             </div>
             <div>
