@@ -50,7 +50,7 @@ function App() {
             <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
           </div>
           <div className="mt-4 mx-3">
-            <p className="mb-4">Upload File to S3</p>
+            <p className="mb-4">Upload MP3 to S3</p>
             <div className="ml-4 mb-6">
               <p>New File Name For s3 (leave blank to keep original file name)</p>
               <input
@@ -61,7 +61,7 @@ function App() {
               />
             </div>
             <div className="ml-4 mb-6">
-              <p>Path of File (assume from root of project)</p>
+              <p>Path of MP3 (assume from root of project)</p>
               <input
                 id="filePath"
                 className="text-black px-2"
