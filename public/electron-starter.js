@@ -13,7 +13,7 @@ let mainWindow;
 AWS.config.update({region: 'us-west-2'});
 
 function createWindow() {
-    mainWindow = new BrowserWindow({width: 800, height: 600, webPreferences: {nodeIntegration: true}});
+    mainWindow = new BrowserWindow({width: 1100, height: 700, webPreferences: {nodeIntegration: true}});
     mainWindow.loadURL('http://localhost:3000');
     mainWindow.webContents.openDevTools();
 
