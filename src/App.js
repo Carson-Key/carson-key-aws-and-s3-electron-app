@@ -1,27 +1,30 @@
-import React, { useEffect } from 'react'
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react'
 import './App.css';
 const { ipcRenderer } = window.require('electron');
 
 function App() {
+  const [awsProfile, setAwsProfile] = useState("")
+
+  const handleSetAWSProfile = () => {
+    if (awsProfile !== "") {
+      ipcRenderer.send('setAWSCreds', awsProfile)
+    }
+  }
 
   useEffect(() => {
-    ipcRenderer.on('getAWSCreds-reply', (event, arg) => {
+    ipcRenderer.on('getS3Buckets-reply', (event, arg) => {
       console.log(arg)
     })
   })
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <button onClick={() => {
-          ipcRenderer.send('getAWSCreds')
-        }}>Test</button>
-      </header>
+    <div>
+      <input
+        onChange={(event) => {setAwsProfile(event.target.value)}}
+        placeholder={"AWS Profile"}
+      />
+      <button onClick={handleSetAWSProfile}>submit</button>
+      <button onClick={() => {ipcRenderer.send('getS3Buckets', awsProfile)}}>s3</button>
     </div>
   );
 }
