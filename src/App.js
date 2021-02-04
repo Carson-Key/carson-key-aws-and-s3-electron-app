@@ -10,6 +10,7 @@ function App() {
   const handleSetAWSProfile = () => {
     if (awsProfile !== "") {
       ipcRenderer.send('setAWSCreds', awsProfile)
+      ipcRenderer.send('getAWSProfile')
     }
   }
 
