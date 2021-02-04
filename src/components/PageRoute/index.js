@@ -3,6 +3,7 @@ import SetAWSProfile from '../../pages/SetAWSProfile'
 import ChooseFilePath from '../../pages/ChooseFilePath'
 import ChooseFile from '../../pages/ChooseFile'
 import Details from '../../pages/Details'
+import AlbumPath from '../../pages/AlbumPath'
 
 function PageRoute() {
     const [currentPage, setCurrentPage] = useState("SetAWSProfile")
@@ -15,6 +16,8 @@ function PageRoute() {
             setCurrentPageComponent(<ChooseFilePath />)
         } else if (currentPage === "UploadFile") {
             setCurrentPageComponent(<ChooseFile />)
+        } else if (currentPage === "UploadAlbumPath") {
+            setCurrentPageComponent(<AlbumPath />)
         } else {
             setCurrentPageComponent(<SetAWSProfile />)
         }
@@ -31,6 +34,8 @@ function PageRoute() {
                     <button onClick={() => {setCurrentPage("UploadPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload MP3 (Path)</button>
                     <br />
                     <button onClick={() => {setCurrentPage("UploadFile")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload MP3 (Choose)</button>
+                    <br />
+                    <button onClick={() => {setCurrentPage("UploadAlbumPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Album (Path)</button>
                 </div>
             </div>
             <div>
