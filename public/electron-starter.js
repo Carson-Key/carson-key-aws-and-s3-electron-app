@@ -38,8 +38,9 @@ app.on('activate', function () {
 // getters
 ipcMain.on('getAWSAccessKey', (event, arg) => {
     AWS.config.getCredentials(function(err) {
-        if (err) console.log(err.stack);
-            // credentials not loaded
+        if (err) {
+            event.reply('getAWSAccessKey-reply', err.stack);
+        }
         else {
             event.reply('getAWSAccessKey-reply', AWS.config.credentials.accessKeyId)
         }
@@ -47,10 +48,11 @@ ipcMain.on('getAWSAccessKey', (event, arg) => {
 })
 ipcMain.on('getAWSProfile', (event, arg) => {
     AWS.config.getCredentials(function(err) {
-        if (err) console.log(err.stack);
-            // credentials not loaded
+        if (err) {
+            event.reply('getAWSProfile-reply', err.stack);
+        }
         else {
-            event.reply('getAWSProfile-reply', AWS.config.credentials.accessKeyId)
+            event.reply('getAWSProfile-reply', AWS.config.credentials.profile)
         }
     });
 })
@@ -72,8 +74,9 @@ ipcMain.on('setAWSCreds', (event, arg) => {
     var credentials = new AWS.SharedIniFileCredentials({profile: arg});
     AWS.config.credentials = credentials;
     AWS.config.getCredentials(function(err) {
-        if (err) console.log(err.stack);
-            // credentials not loaded
+        if (err) {
+            event.reply('setAWSCreds-reply', err.stack);
+        }
         else {
             event.reply('setAWSCreds-reply', AWS.config.credentials.accessKeyId)
         }

@@ -13,10 +13,10 @@ function App() {
   }
 
   useEffect(() => {
-    ipcRenderer.on('getS3Buckets-reply', (event, arg) => {
+    ipcRenderer.on('getAWSProfile-reply', (event, arg) => {
       console.log(arg)
     })
-  })
+  }, [])
 
   return (
     <div>
@@ -28,7 +28,7 @@ function App() {
         <button className="bg-blue-400 text-white mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
       </div>
       <div className="mt-4 mx-3">
-        <button className="bg-blue-400 text-white px-3 py-1 rounded" onClick={() => {ipcRenderer.send('getS3Buckets', awsProfile)}}>s3</button>
+        <button className="bg-blue-400 text-white px-3 py-1 rounded" onClick={() => {ipcRenderer.send('getAWSProfile', awsProfile)}}>Profile</button>
       </div>
     </div>
   );
