@@ -260,8 +260,6 @@ ipcMain.on('uploadArtistToS3Choose', (event, arg) => {
             fs.readdirSync(folderName).forEach(fileName => {
                 let fileType = path.extname(fileName)
 
-                console.log(fileName)
-
                 if (fileType !== ".mp3") {
                     event.reply('uploadFileToS3Choose-reply', 'Please give a mp3 file, not a: ' + fileType);
                 } else {
