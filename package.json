@@ -15,7 +15,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "tailwindcss": "^2.0.2",
-    "web-vitals": "^1.1.0"
+    "web-vitals": "^1.1.0",
+    "electron": "^11.2.2"
   },
   "main": "public/electron-starter.js",
   "scripts": {
@@ -43,8 +44,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "electron": "^11.2.2"
   }
 }
