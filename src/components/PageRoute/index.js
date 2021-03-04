@@ -38,19 +38,19 @@ function PageRoute() {
                 <Details />
                 <div>
                     <p className="font-bold mt-4 mb-1">Navigation</p>
-                    <button onClick={() => {setCurrentPage("SetAWSProfile")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Set AWS Profile</button>
+                    <button onClick={() => {setCurrentPage("SetAWSProfile")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Set AWS Profile</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload MP3 (Path)</button>
+                    <button onClick={() => {setCurrentPage("UploadPath")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload MP3 (Path)</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadFile")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload MP3 (Choose)</button>
+                    <button onClick={() => {setCurrentPage("UploadFile")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload MP3 (Choose)</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadAlbumPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Album (Path)</button>
+                    <button onClick={() => {setCurrentPage("UploadAlbumPath")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Album (Path)</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadAlbumChoose")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Album (Choose)</button>
+                    <button onClick={() => {setCurrentPage("UploadAlbumChoose")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Album (Choose)</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadArtistPath")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Artist (Path)</button>
+                    <button onClick={() => {setCurrentPage("UploadArtistPath")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Artist (Path)</button>
                     <br />
-                    <button onClick={() => {setCurrentPage("UploadArtistChoose")}} className="ml-4 bg-white ml-4 px-3 py-1 text-black mb-2">Upload Artist (Choose)</button>
+                    <button onClick={() => {setCurrentPage("UploadArtistChoose")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Artist (Choose)</button>
                 </div>
             </div>
             <div>

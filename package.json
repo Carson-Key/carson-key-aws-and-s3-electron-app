@@ -25,7 +25,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
-    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css"
+    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
+    "db": "docker run -p 8000:8000 dwmkerr/dynamodb -sharedDb"
   },
   "eslintConfig": {
     "extends": [
