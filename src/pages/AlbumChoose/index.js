@@ -5,13 +5,16 @@ const { ipcRenderer } = window.require('electron');
 function AlbumChoose() {
     const [folderName, setFolderName] = useState("")
     const [folderPath, setFolderPath] = useState("")
+    const [artist, setArtist] = useState("")
 
     const handleFolder = (event) => {
         setFolderPath(event.target.files[0]);
     }
     const handleS3FolderUpload = () => {
         if (folderPath !== "" && folderName !== "") {
-            ipcRenderer.send('uploadAlbumToS3Choose', {folderPath: folderPath.path, folderName: folderName})
+            ipcRenderer.send('uploadAlbumToS3Choose', {
+                folderPath: folderPath.path, folderName: folderName, artistName: artist
+            })
         }
     }
 
@@ -25,6 +28,15 @@ function AlbumChoose() {
                     className="text-black px-2"
                     onChange={(event) => {setFolderName(event.target.value)}}
                     placeholder="Name"
+                />
+            </div>
+            <div className="ml-4 mb-6">
+                <p>Artist Name (Leave Blank if no Artist)</p>
+                <input
+                    id="artistName"
+                    className="text-black px-2"
+                    onChange={(event) => {setArtist(event.target.value)}}
+                    placeholder="Artist"
                 />
             </div>
             <div className="ml-4 mb-6">
