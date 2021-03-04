@@ -20,7 +20,7 @@ function ArtistChoose() {
         <div className="mt-4 mx-3">
             <p className="mb-4">Upload Artist to S3</p>
             <div className="ml-4 mb-6">
-                <p>Artist Genre</p>
+                <p>Artist Genre (leave blank if none)</p>
                 <input
                     id="genre"
                     className="text-black px-2"
