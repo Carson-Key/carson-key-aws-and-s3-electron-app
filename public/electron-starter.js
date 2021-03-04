@@ -64,6 +64,7 @@ ipcMain.on('setAWSCreds', (event, arg) => {
 
 // upload to s3
 ipcMain.on('uploadFileToS3', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
     let s3 = new AWS.S3({apiVersion: '2006-03-01'});
     var file = __dirname + "/../" + arg.filePath;
     let fileType = path.extname(file)
@@ -94,7 +95,56 @@ ipcMain.on('uploadFileToS3', (event, arg) => {
         s3.upload (uploadParams, (err, data) => {
             if (err) {
                 event.reply('uploadFileToS3-reply', err);
-            } if (data) {
+            } 
+            if (data) {
+                var params = {
+                    TableName: "music",
+                    Item: {
+                        pk: "song",
+                        sk: path.basename(uploadParams.Key, '.mp3'),
+                        id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                        type: "song",
+                        attributes: {
+                            name: path.basename(uploadParams.Key, '.mp3'),
+                            s3ey: data.key,
+                        }
+                    }
+                };
+                let albumName
+
+                if (arg.albumName) {
+                    albumName = arg.albumName
+                } else {
+                    albumName = "noAlbum"
+                }
+                var paramsAlbum = {
+                    TableName: "music",
+                    Item: {
+                        pk: "album#" + albumName,
+                        sk: "song#" + path.basename(uploadParams.Key, '.mp3'),
+                        id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                        type: "song",
+                        attributes: {
+                            name: path.basename(uploadParams.Key, '.mp3'),
+                            s3ey: data.key,
+                        }
+                    }
+                };
+
+                docClient.put(params, (err, data) => {
+                    if (err) {
+                        event.reply('uploadFileToS3Choose-reply', err);
+                    } else {
+                        event.reply('uploadFileToS3Choose-reply', "Song Successfully created");
+                    }
+                });
+                docClient.put(paramsAlbum, (err, data) => {
+                    if (err) {
+                        event.reply('uploadFileToS3Choose-reply', err);
+                    } else {
+                        event.reply('uploadFileToS3Choose-reply', "Song#Album Successfully created");
+                    }
+                });
                 event.reply('uploadFileToS3-reply', "Upload Success: " + data.Location);
             }
         });
@@ -102,6 +152,7 @@ ipcMain.on('uploadFileToS3', (event, arg) => {
 })
 
 ipcMain.on('uploadFileToS3Choose', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
     let s3 = new AWS.S3({apiVersion: '2006-03-01'});
     var file = arg.filePath;
     let fileType = path.extname(file)
@@ -132,8 +183,57 @@ ipcMain.on('uploadFileToS3Choose', (event, arg) => {
         s3.upload (uploadParams, (err, data) => {
             if (err) {
                 event.reply('uploadFileToS3Choose-reply', err);
-            } if (data) {
-                event.reply('uploadFileToS3Choose-reply', "Upload Success: " + data.Location);
+            }
+            if (data) {
+                var params = {
+                    TableName: "music",
+                    Item: {
+                        pk: "song",
+                        sk: path.basename(uploadParams.Key, '.mp3'),
+                        id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                        type: "song",
+                        attributes: {
+                            name: path.basename(uploadParams.Key, '.mp3'),
+                            s3ey: data.key,
+                        }
+                    }
+                };
+                let albumName
+
+                if (arg.albumName) {
+                    albumName = arg.albumName
+                } else {
+                    albumName = "noAlbum"
+                }
+                var paramsAlbum = {
+                    TableName: "music",
+                    Item: {
+                        pk: "album#" + albumName,
+                        sk: "song#" + path.basename(uploadParams.Key, '.mp3'),
+                        id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                        type: "song",
+                        attributes: {
+                            name: path.basename(uploadParams.Key, '.mp3'),
+                            s3ey: data.key,
+                        }
+                    }
+                };
+
+                docClient.put(params, (err, data) => {
+                    if (err) {
+                        event.reply('uploadFileToS3Choose-reply', err);
+                    } else {
+                        event.reply('uploadFileToS3Choose-reply', "Song Successfully created");
+                    }
+                });
+                docClient.put(paramsAlbum, (err, data) => {
+                    if (err) {
+                        event.reply('uploadFileToS3Choose-reply', err);
+                    } else {
+                        event.reply('uploadFileToS3Choose-reply', "Song#Album Successfully created");
+                    }
+                });
+                event.reply('uploadFileToS3-reply', "Upload Success: " + data.Location);
             }
         });
     }
