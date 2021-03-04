@@ -7,6 +7,7 @@ import AlbumPath from '../../pages/AlbumPath'
 import AlbumChoose from '../../pages/AlbumChoose'
 import ArtistPath from '../../pages/ArtistPath'
 import ArtistChoose from '../../pages/ArtistChoose'
+import CreateGenre from '../../pages/CreateGenre'
 
 function PageRoute() {
     const [currentPage, setCurrentPage] = useState("SetAWSProfile")
@@ -27,6 +28,8 @@ function PageRoute() {
             setCurrentPageComponent(<ArtistPath />)
         } else if (currentPage === "UploadArtistChoose") {
             setCurrentPageComponent(<ArtistChoose />)
+        } else if (currentPage === "CreateGenre") {
+            setCurrentPageComponent(<CreateGenre />)
         } else {
             setCurrentPageComponent(<SetAWSProfile />)
         }
@@ -51,6 +54,8 @@ function PageRoute() {
                     <button onClick={() => {setCurrentPage("UploadArtistPath")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Artist (Path)</button>
                     <br />
                     <button onClick={() => {setCurrentPage("UploadArtistChoose")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Artist (Choose)</button>
+                    <br />
+                    <button onClick={() => {setCurrentPage("CreateGenre")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Create Genre</button>
                 </div>
             </div>
             <div>

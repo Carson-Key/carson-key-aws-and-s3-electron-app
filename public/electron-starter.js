@@ -288,3 +288,29 @@ ipcMain.on('uploadArtistToS3Choose', (event, arg) => {
         }   
     })
 })
+
+ipcMain.on('createGenre', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    const genre = arg.genreName.toLowerCase()
+
+    var params = {
+        TableName: "music",
+        Item: {
+            pk: "genre",
+            sk: genre,
+            id: "genre_" + genre,
+            type: "genre",
+            attributes: {
+                name: genre
+            }
+        }
+    };
+
+    docClient.put(params, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+        }
+    });
+})
