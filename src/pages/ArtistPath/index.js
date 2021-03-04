@@ -5,16 +5,26 @@ const { ipcRenderer } = window.require('electron');
 function ArtistPath() {
     const [folderName, setFolderName] = useState("")
     const [folderPath, setFolderPath] = useState("")
+    const [genre, setGenre] = useState("")
 
     const handleS3FolderUpload = () => {
         if (folderPath !== "" && folderName !== "") {
-            ipcRenderer.send('uploadArtistToS3', {folderPath: folderPath, folderName: folderName})
+            ipcRenderer.send('uploadArtistToS3', {folderPath: folderPath, folderName: folderName, genreName: genre})
         }
     }
 
     return (
         <div className="mt-4 mx-3">
             <p className="mb-4">Upload Artist to S3</p>
+            <div className="ml-4 mb-6">
+                <p>Artist Genre</p>
+                <input
+                    id="genre"
+                    className="text-black px-2"
+                    onChange={(event) => {setGenre(event.target.value)}}
+                    placeholder="genre"
+                />
+            </div>
             <div className="ml-4 mb-6">
                 <p>New Folder Name For s3</p>
                 <input
