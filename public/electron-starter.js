@@ -489,12 +489,100 @@ ipcMain.on('uploadAlbumToS3Choose', (event, arg) => {
 })
 
 ipcMain.on('uploadArtistToS3', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
     let s3 = new AWS.S3({apiVersion: '2006-03-01'});
     var artist = arg.folderPath;
     let artistName = arg.folderName
 
+    var artistParams = {
+        TableName: "music",
+        Item: {
+            pk: "artist",
+            sk: artistName,
+            id: "artist_" + artistName,
+            type: "artist",
+            attributes: {
+                name: artistName
+            }
+        }
+    };
+    docClient.put(artistParams, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Artist#Album Successfully created");
+        }
+    });
+    let genre
+    if (arg.genreName) {
+        genre = arg.genreName
+    } else {
+        genre = "noGenre"
+    }
+
+    var genreParams = {
+        TableName: "music",
+        Item: {
+            pk: "genre#" + genre,
+            sk: "artist#" + artistName,
+            id: "artist_" + artistName,
+            type: "artist",
+            attributes: {
+                name: artistName
+            }
+        }
+    };
+    docClient.put(genreParams, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Artist#Album Successfully created");
+        }
+    });
+
     fs.readdirSync(artist).forEach(originalFolderName => {
         let folderName = artist + "/" + originalFolderName
+
+        var albumParams = {
+            TableName: "music",
+            Item: {
+                pk: "album",
+                sk: originalFolderName,
+                id: "album_" + originalFolderName,
+                type: "album",
+                attributes: {
+                    name: originalFolderName
+                }
+            }
+        };
+        docClient.put(albumParams, (err, data) => {
+            if (err) {
+                event.reply('uploadFileToS3Choose-reply', err);
+            } else {
+                event.reply('uploadFileToS3Choose-reply', "Album Successfully created");
+            }
+        });
+    
+        var artistParams = {
+            TableName: "music",
+            Item: {
+                pk: "artist#" + artistName,
+                sk: "album#" + originalFolderName,
+                id: "album_" + originalFolderName,
+                type: "album",
+                attributes: {
+                    name: originalFolderName
+                }
+            }
+        };
+        docClient.put(artistParams, (err, data) => {
+            if (err) {
+                event.reply('uploadFileToS3Choose-reply', err);
+            } else {
+                event.reply('uploadFileToS3Choose-reply', "Artist#Album Successfully created");
+            }
+        });
+
         fs.readdirSync(folderName).forEach(fileName => {
             let fileType = path.extname(fileName)
 
@@ -518,6 +606,47 @@ ipcMain.on('uploadArtistToS3', (event, arg) => {
                     if (err) {
                         event.reply('uploadFileToS3Choose-reply', err);
                     } if (data) {
+                        var params = {
+                            TableName: "music",
+                            Item: {
+                                pk: "song",
+                                sk: path.basename(uploadParams.Key, '.mp3'),
+                                id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                                type: "song",
+                                attributes: {
+                                    name: path.basename(uploadParams.Key, '.mp3'),
+                                    s3ey: data.key,
+                                }
+                            }
+                        };
+                        var paramsAlbum = {
+                            TableName: "music",
+                            Item: {
+                                pk: "album#" + originalFolderName,
+                                sk: "song#" + path.basename(uploadParams.Key, '.mp3'),
+                                id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                                type: "song",
+                                attributes: {
+                                    name: path.basename(uploadParams.Key, '.mp3'),
+                                    s3ey: data.key,
+                                }
+                            }
+                        };
+        
+                        docClient.put(params, (err, data) => {
+                            if (err) {
+                                event.reply('uploadFileToS3Choose-reply', err);
+                            } else {
+                                event.reply('uploadFileToS3Choose-reply', "Song Successfully created");
+                            }
+                        });
+                        docClient.put(paramsAlbum, (err, data) => {
+                            if (err) {
+                                event.reply('uploadFileToS3Choose-reply', err);
+                            } else {
+                                event.reply('uploadFileToS3Choose-reply', "Song#Album Successfully created");
+                            }
+                        });
                         event.reply('uploadFileToS3Choose-reply', "Upload Success: " + data.Location);
                     }
                 });
@@ -527,15 +656,101 @@ ipcMain.on('uploadArtistToS3', (event, arg) => {
 })
 
 ipcMain.on('uploadArtistToS3Choose', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
     let s3 = new AWS.S3({apiVersion: '2006-03-01'});
     var artist = path.dirname(arg.folderPath);
     let artistName = arg.folderName
+
+    var artistParams = {
+        TableName: "music",
+        Item: {
+            pk: "artist",
+            sk: artistName,
+            id: "artist_" + artistName,
+            type: "artist",
+            attributes: {
+                name: artistName
+            }
+        }
+    };
+    docClient.put(artistParams, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Artist#Album Successfully created");
+        }
+    });
+    let genre
+    if (arg.genreName) {
+        genre = arg.genreName
+    } else {
+        genre = "noGenre"
+    }
+
+    var genreParams = {
+        TableName: "music",
+        Item: {
+            pk: "genre#" + genre,
+            sk: "artist#" + artistName,
+            id: "artist_" + artistName,
+            type: "artist",
+            attributes: {
+                name: artistName
+            }
+        }
+    };
+    docClient.put(genreParams, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Artist#Album Successfully created");
+        }
+    });
 
     fs.readdirSync(artist).forEach(originalFolderName => {
         let folderName = artist + "/" + originalFolderName
         if (originalFolderName === ".DS_Store") {
             // nothing
         } else {
+            var albumParams = {
+                TableName: "music",
+                Item: {
+                    pk: "album",
+                    sk: originalFolderName,
+                    id: "album_" + originalFolderName,
+                    type: "album",
+                    attributes: {
+                        name: originalFolderName
+                    }
+                }
+            };
+            docClient.put(albumParams, (err, data) => {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Album Successfully created");
+                }
+            });
+        
+            var artistParams = {
+                TableName: "music",
+                Item: {
+                    pk: "artist#" + artistName,
+                    sk: "album#" + originalFolderName,
+                    id: "album_" + originalFolderName,
+                    type: "album",
+                    attributes: {
+                        name: originalFolderName
+                    }
+                }
+            };
+            docClient.put(artistParams, (err, data) => {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Artist#Album Successfully created");
+                }
+            });
             fs.readdirSync(folderName).forEach(fileName => {
                 let fileType = path.extname(fileName)
 
@@ -559,6 +774,47 @@ ipcMain.on('uploadArtistToS3Choose', (event, arg) => {
                         if (err) {
                             event.reply('uploadFileToS3Choose-reply', err);
                         } if (data) {
+                            var params = {
+                                TableName: "music",
+                                Item: {
+                                    pk: "song",
+                                    sk: path.basename(uploadParams.Key, '.mp3'),
+                                    id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                                    type: "song",
+                                    attributes: {
+                                        name: path.basename(uploadParams.Key, '.mp3'),
+                                        s3ey: data.key,
+                                    }
+                                }
+                            };
+                            var paramsAlbum = {
+                                TableName: "music",
+                                Item: {
+                                    pk: "album#" + originalFolderName,
+                                    sk: "song#" + path.basename(uploadParams.Key, '.mp3'),
+                                    id: "song_" + path.basename(uploadParams.Key, '.mp3'),
+                                    type: "song",
+                                    attributes: {
+                                        name: path.basename(uploadParams.Key, '.mp3'),
+                                        s3ey: data.key,
+                                    }
+                                }
+                            };
+            
+                            docClient.put(params, (err, data) => {
+                                if (err) {
+                                    event.reply('uploadFileToS3Choose-reply', err);
+                                } else {
+                                    event.reply('uploadFileToS3Choose-reply', "Song Successfully created");
+                                }
+                            });
+                            docClient.put(paramsAlbum, (err, data) => {
+                                if (err) {
+                                    event.reply('uploadFileToS3Choose-reply', err);
+                                } else {
+                                    event.reply('uploadFileToS3Choose-reply', "Song#Album Successfully created");
+                                }
+                            });
                             event.reply('uploadFileToS3Choose-reply', "Upload Success: " + data.Location);
                         }
                     });
