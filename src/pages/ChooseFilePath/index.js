@@ -5,10 +5,11 @@ const { ipcRenderer } = window.require('electron');
 function ChooseFilePath() {
     const [fileName, setFileName] = useState("")
     const [filePath, setFilePath] = useState("")
+    const [album, setAlbum] = useState("")
 
     const handleS3FileUpload = () => {
         if (filePath !== "") {
-            ipcRenderer.send('uploadFileToS3', {filePath: filePath, fileName: fileName})
+            ipcRenderer.send('uploadFileToS3', {filePath: filePath, fileName: fileName, albumName: album})
         }
     }
 
@@ -22,6 +23,15 @@ function ChooseFilePath() {
                     className="text-black px-2"
                     onChange={(event) => {setFileName(event.target.value)}}
                     placeholder="Name"
+                />
+            </div>
+            <div className="ml-4 mb-6">
+                <p>Album Name (if no album, leave blank)</p>
+                <input
+                    id="albumName"
+                    className="text-black px-2"
+                    onChange={(event) => {setAlbum(event.target.value)}}
+                    placeholder="Album"
                 />
             </div>
             <div className="ml-4 mb-6">
