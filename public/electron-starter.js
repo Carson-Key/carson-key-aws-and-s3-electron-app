@@ -1016,7 +1016,9 @@ ipcMain.on('updateArtist', (event, arg) => {
                                 sk: "artist#" + newArtist,
                                 id: artistGenre.id,
                                 type: "artist",
-                                attributes: artistGenre.attributes
+                                attributes: {
+                                    name: newArtist
+                                }
                             }
                         };
                         var deleteGenre = {
@@ -1178,7 +1180,9 @@ ipcMain.on('updateAlbum', (event, arg) => {
                                 sk: "album#" + newAlbum,
                                 id: albumArtist.id,
                                 type: "album",
-                                attributes: albumArtist.attributes
+                                attributes: {
+                                    name: newAlbum
+                                }
                             }
                         };
                         var deleteArtist = {
