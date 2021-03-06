@@ -2,28 +2,40 @@ import React, { useState } from 'react'
 
 const { ipcRenderer } = window.require('electron');
 
-function SetAWSProfile() {
-    const [awsProfile, setAwsProfile] = useState("")
+function AlbumUpdate() {
+    const [oldAlbum, setOldAlbum] = useState("")
+    const [newAlbum, setNewAlbum] = useState("")
 
-    const handleSetAWSProfile = () => {
-        if (awsProfile !== "") {
-            ipcRenderer.send('setAWSCreds', awsProfile)
-            ipcRenderer.send('getAWSProfile')
+    const handleUpdateAlbum = () => {
+        if (oldAlbum !== "" && newAlbum !== "") {
+            ipcRenderer.send('updateAlbum', {oldAlbum, newAlbum})
         }
     }
 
     return (
         <div className="mt-4 mx-3">
-            <p>Set AWS Profile Used</p>
-            <input
-                id="awsProfile"
-                className="text-black px-2 ml-4"
-                onChange={(event) => {setAwsProfile(event.target.value)}}
-                placeholder="AWS Profile"
-            />
-            <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
+            <p>Update Album</p>
+            <div className="ml-4 mb-6">
+                <p>Old Album Name</p>
+                <input
+                    id="oldAlbumName"
+                    className="text-black px-2"
+                    onChange={(event) => {setOldAlbum(event.target.value)}}
+                    placeholder="Old Album"
+                />
+            </div>
+            <div className="ml-4 mb-6">
+                <p>New Album Name</p>
+                <input
+                    id="newAlbumName"
+                    className="text-black px-2"
+                    onChange={(event) => {setNewAlbum(event.target.value)}}
+                    placeholder="New Album"
+                />
+            </div>
+            <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleUpdateAlbum}>submit</button>
         </div>
     )
 }
 
-export default SetAWSProfile
+export default AlbumUpdate
