@@ -8,6 +8,7 @@ import AlbumChoose from '../../pages/AlbumChoose'
 import ArtistPath from '../../pages/ArtistPath'
 import ArtistChoose from '../../pages/ArtistChoose'
 import CreateGenre from '../../pages/CreateGenre'
+import UpdateTabs from '../UpdateTabs'
 
 function PageRoute() {
     const [currentPage, setCurrentPage] = useState("SetAWSProfile")
@@ -30,6 +31,8 @@ function PageRoute() {
             setCurrentPageComponent(<ArtistChoose />)
         } else if (currentPage === "CreateGenre") {
             setCurrentPageComponent(<CreateGenre />)
+        } else if (currentPage === "UpdateDynamo") {
+            setCurrentPageComponent(<UpdateTabs />)
         } else {
             setCurrentPageComponent(<SetAWSProfile />)
         }
@@ -56,6 +59,8 @@ function PageRoute() {
                     <button onClick={() => {setCurrentPage("UploadArtistChoose")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Upload Artist (Choose)</button>
                     <br />
                     <button onClick={() => {setCurrentPage("CreateGenre")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Create Genre</button>
+                    <br />
+                    <button onClick={() => {setCurrentPage("UpdateDynamo")}} className="ml-4 bg-white px-3 py-1 text-black mb-2">Update Dynamo</button>
                 </div>
             </div>
             <div>
