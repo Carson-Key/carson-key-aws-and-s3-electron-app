@@ -1264,3 +1264,136 @@ ipcMain.on('updateAlbum', (event, arg) => {
         }
     });
 })
+
+ipcMain.on('updateSong', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    const oldSong = arg.oldSong.toLowerCase()
+    const newSong = arg.newSong.toLowerCase()
+
+    var getSong = {
+        TableName : "music",
+        KeyConditionExpression: "#pk = :pk and #sk = :sk",
+        ExpressionAttributeNames:{
+            "#pk": "pk",
+            "#sk": "sk"
+        },
+        ExpressionAttributeValues: {
+            ":pk": "song",
+            ":sk": oldSong
+        }
+    };
+
+    docClient.query(getSong, function(err, data) {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            var deleteSong = {
+                TableName: "music",
+                Key:{
+                    "pk": "song",
+                    "sk": oldSong
+                }
+            };
+            var createSong = {
+                TableName: "music",
+                Item: {
+                    pk: "song",
+                    sk: newSong,
+                    id: "song_" + newSong,
+                    type: "song",
+                    attributes: {
+                        name: newSong,
+                        s3ey: data.Items[0].attributes.s3ey
+                    }
+                }
+            };
+            var albums = {
+                TableName : "music",
+                KeyConditionExpression: "#pk = :pk",
+                ExpressionAttributeNames:{
+                    "#pk": "pk"
+                },
+                ExpressionAttributeValues: {
+                    ":pk": "album"
+                }
+            };
+            
+            docClient.query(albums, function(err, data) {
+                if (err) {
+                    event.reply(err);
+                } else {
+                    data.Items.forEach((album) => {
+                        var getAlbum = {
+                            TableName : "music",
+                            KeyConditionExpression: "#pk = :pk and #sk = :sk",
+                            ExpressionAttributeNames:{
+                                "#pk": "pk",
+                                "#sk": "sk"
+                            },
+                            ExpressionAttributeValues: {
+                                ":pk": "album#" + album.sk,
+                                ":sk": "song#" + oldSong
+                            }
+                        };
+                        docClient.query(getAlbum, function(err, data) {
+                            if (err) {
+                                event.reply('uploadFileToS3Choose-reply', err);
+                            } else {
+                              data.Items.forEach((songAlbum) => {
+                                var createAlbum = {
+                                    TableName: "music",
+                                    Item: {
+                                        pk: songAlbum.pk,
+                                        sk: "song#" + newSong,
+                                        id: songAlbum.id,
+                                        type: "song",
+                                        attributes: {
+                                            name: newSong,
+                                            s3ey: songAlbum.attributes.s3ey
+                                        }
+                                    }
+                                };
+                                var deleteAlbum = {
+                                    TableName: "music",
+                                    Key:{
+                                        "pk": songAlbum.pk,
+                                        "sk": songAlbum.sk,
+                                    }
+                                };
+                                docClient.put(createAlbum, (err, data) => {
+                                    if (err) {
+                                        event.reply('uploadFileToS3Choose-reply', err);
+                                    } else {
+                                        event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+                                    }
+                                });
+                                docClient.delete(deleteAlbum, function(err, data) {
+                                    if (err) {
+                                        event.reply('uploadFileToS3Choose-reply', err);
+                                    } else {
+                                        event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+                                    }
+                                });
+                              })
+                            }
+                        })
+                    })
+                }
+            })
+            docClient.delete(deleteSong, function(err, data) {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+                }
+            });
+            docClient.put(createSong, (err, data) => {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+                }
+            });
+        }
+    });
+})
