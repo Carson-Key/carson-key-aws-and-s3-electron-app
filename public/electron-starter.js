@@ -884,12 +884,6 @@ ipcMain.on('updateGenre', (event, arg) => {
             ":pk": "genre#" + oldGenre
         }
     };
-    var deleteArtist = {
-        TableName: "music",
-        Key:{
-            "pk": "genre#" + oldGenre,
-        }
-    };
 
     docClient.query(getArtist, function(err, data) {
         if (err) {
@@ -939,6 +933,168 @@ ipcMain.on('updateGenre', (event, arg) => {
         }
     });
     docClient.put(createGenre, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+        }
+    });
+})
+
+ipcMain.on('updateArtist', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    const oldArtist = arg.oldArtist.toLowerCase()
+    const newArtist = arg.newArtist.toLowerCase()
+
+    var deleteArtist = {
+        TableName: "music",
+        Key:{
+            "pk": "artist",
+            "sk": oldArtist
+        }
+    };
+    var createArtist = {
+        TableName: "music",
+        Item: {
+            pk: "artist",
+            sk: newArtist,
+            id: "artist_" + newArtist,
+            type: "artist",
+            attributes: {
+                name: newArtist
+            }
+        }
+    };
+    var getAlbum = {
+        TableName : "music",
+        KeyConditionExpression: "#pk = :pk",
+        ExpressionAttributeNames:{
+            "#pk": "pk"
+        },
+        ExpressionAttributeValues: {
+            ":pk": "artist#" + oldArtist
+        }
+    };
+
+    var genres = {
+        TableName : "music",
+        KeyConditionExpression: "#pk = :pk",
+        ExpressionAttributeNames:{
+            "#pk": "pk"
+        },
+        ExpressionAttributeValues: {
+            ":pk": "genre"
+        }
+      };
+    
+      docClient.query(genres, function(err, data) {
+        if (err) {
+            event.reply(err);
+        } else {
+            data.Items.forEach((genre) => {
+                var getGenre = {
+                    TableName : "music",
+                    KeyConditionExpression: "#pk = :pk and #sk = :sk",
+                    ExpressionAttributeNames:{
+                        "#pk": "pk",
+                        "#sk": "sk"
+                    },
+                    ExpressionAttributeValues: {
+                        ":pk": "genre#" + genre.sk,
+                        ":sk": "artist#" + oldArtist
+                    }
+                };
+                docClient.query(getGenre, function(err, data) {
+                    if (err) {
+                        event.reply('uploadFileToS3Choose-reply', err);
+                    } else {
+                      data.Items.forEach((artistGenre) => {
+                        var createGenre = {
+                            TableName: "music",
+                            Item: {
+                                pk: artistGenre.pk,
+                                sk: "artist#" + newArtist,
+                                id: artistGenre.id,
+                                type: "artist",
+                                attributes: artistGenre.attributes
+                            }
+                        };
+                        var deleteGenre = {
+                            TableName: "music",
+                            Key:{
+                                "pk": artistGenre.pk,
+                                "sk": artistGenre.sk,
+                            }
+                        };
+                        docClient.put(createGenre, (err, data) => {
+                            if (err) {
+                                event.reply('uploadFileToS3Choose-reply', err);
+                            } else {
+                                event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+                            }
+                        });
+                        docClient.delete(deleteGenre, function(err, data) {
+                            if (err) {
+                                event.reply('uploadFileToS3Choose-reply', err);
+                            } else {
+                                event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+                            }
+                        });
+                      })
+                    }
+                  });
+            })
+        }
+      });
+
+    docClient.query(getAlbum, function(err, data) {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+          data.Items.forEach((artistAlbum) => {
+            var createAlbum = {
+                TableName: "music",
+                Item: {
+                    pk: "artist#" + newArtist,
+                    sk: artistAlbum.sk,
+                    id: artistAlbum.id,
+                    type: "album",
+                    attributes: artistAlbum.attributes
+                }
+            };
+            var deleteAlbum = {
+                TableName: "music",
+                Key:{
+                    "pk": "artist#" + oldArtist,
+                    "sk": artistAlbum.sk,
+                }
+            };
+            docClient.put(createAlbum, (err, data) => {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+                }
+            });
+            docClient.delete(deleteAlbum, function(err, data) {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+                }
+            });
+          })
+        }
+      });
+
+    docClient.delete(deleteArtist, function(err, data) {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+        }
+    });
+    docClient.put(createArtist, (err, data) => {
         if (err) {
             event.reply('uploadFileToS3Choose-reply', err);
         } else {
