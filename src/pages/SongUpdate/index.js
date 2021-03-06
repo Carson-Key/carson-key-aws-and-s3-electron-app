@@ -14,7 +14,7 @@ function SongUpdate() {
 
     return (
         <div className="mt-4 mx-3">
-            <p>Update Album</p>
+            <p>Update Song</p>
             <div className="ml-4 mb-6">
                 <p>Old Song Name</p>
                 <input
