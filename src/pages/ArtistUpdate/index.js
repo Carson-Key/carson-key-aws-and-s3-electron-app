@@ -2,28 +2,40 @@ import React, { useState } from 'react'
 
 const { ipcRenderer } = window.require('electron');
 
-function SetAWSProfile() {
-    const [awsProfile, setAwsProfile] = useState("")
+function ArtistUpdate() {
+    const [oldArtist, setOldArtist] = useState("")
+    const [newArtist, setNewArtist] = useState("")
 
-    const handleSetAWSProfile = () => {
-        if (awsProfile !== "") {
-            ipcRenderer.send('setAWSCreds', awsProfile)
-            ipcRenderer.send('getAWSProfile')
+    const handleUpdateArtist = () => {
+        if (oldArtist !== "" && newArtist !== "") {
+            ipcRenderer.send('updateArtist', {oldArtist, newArtist})
         }
     }
 
     return (
         <div className="mt-4 mx-3">
-            <p>Set AWS Profile Used</p>
-            <input
-                id="awsProfile"
-                className="text-black px-2 ml-4"
-                onChange={(event) => {setAwsProfile(event.target.value)}}
-                placeholder="AWS Profile"
-            />
-            <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleSetAWSProfile}>submit</button>
+            <p>Update Artist</p>
+            <div className="ml-4 mb-6">
+                <p>Old Artist Name</p>
+                <input
+                    id="oldArtistName"
+                    className="text-black px-2"
+                    onChange={(event) => {setOldArtist(event.target.value)}}
+                    placeholder="Old Artist"
+                />
+            </div>
+            <div className="ml-4 mb-6">
+                <p>New Artist Name</p>
+                <input
+                    id="newArtistName"
+                    className="text-black px-2"
+                    onChange={(event) => {setNewArtist(event.target.value)}}
+                    placeholder="New Artist"
+                />
+            </div>
+            <button className="bg-blue-400 mx-5 px-3 py-1 rounded" onClick={handleUpdateArtist}>submit</button>
         </div>
     )
 }
 
-export default SetAWSProfile
+export default ArtistUpdate
