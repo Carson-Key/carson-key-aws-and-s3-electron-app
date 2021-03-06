@@ -8,7 +8,7 @@ function UpdateGenre() {
 
     const handleUpdateGenre = () => {
         if (oldGenre !== "" && newGenre !== "") {
-            ipcRenderer.send('updateGenre', oldGenre, newGenre)
+            ipcRenderer.send('updateGenre', {oldGenre, newGenre})
         }
     }
 

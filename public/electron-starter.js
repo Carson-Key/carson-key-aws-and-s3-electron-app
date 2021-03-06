@@ -849,3 +849,100 @@ ipcMain.on('createGenre', (event, arg) => {
         }
     });
 })
+
+ipcMain.on('updateGenre', (event, arg) => {
+    var docClient = new AWS.DynamoDB.DocumentClient();
+    const oldGenre = arg.oldGenre.toLowerCase()
+    const newGenre = arg.newGenre.toLowerCase()
+
+    var deleteGenre = {
+        TableName: "music",
+        Key:{
+            "pk": "genre",
+            "sk": oldGenre
+        }
+    };
+    var createGenre = {
+        TableName: "music",
+        Item: {
+            pk: "genre",
+            sk: newGenre,
+            id: "genre_" + newGenre,
+            type: "genre",
+            attributes: {
+                name: newGenre
+            }
+        }
+    };
+    var getArtist = {
+        TableName : "music",
+        KeyConditionExpression: "#pk = :pk",
+        ExpressionAttributeNames:{
+            "#pk": "pk"
+        },
+        ExpressionAttributeValues: {
+            ":pk": "genre#" + oldGenre
+        }
+    };
+    var deleteArtist = {
+        TableName: "music",
+        Key:{
+            "pk": "genre#" + oldGenre,
+        }
+    };
+
+    docClient.query(getArtist, function(err, data) {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+          data.Items.forEach((genreArtist) => {
+            var createArtist = {
+                TableName: "music",
+                Item: {
+                    pk: "genre#" + newGenre,
+                    sk: genreArtist.sk,
+                    id: genreArtist.id,
+                    type: "artist",
+                    attributes: genreArtist.attributes
+                }
+            };
+            var deleteArtist = {
+                TableName: "music",
+                Key:{
+                    "pk": "genre#" + oldGenre,
+                    "sk": genreArtist.sk,
+                }
+            };
+            docClient.put(createArtist, (err, data) => {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+                }
+            });
+            docClient.delete(deleteArtist, function(err, data) {
+                if (err) {
+                    event.reply('uploadFileToS3Choose-reply', err);
+                } else {
+                    event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+                }
+            });
+          })
+        }
+      });
+
+    docClient.delete(deleteGenre, function(err, data) {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Genre Successfully Updated");
+        }
+    });
+    docClient.put(createGenre, (err, data) => {
+        if (err) {
+            event.reply('uploadFileToS3Choose-reply', err);
+        } else {
+            event.reply('uploadFileToS3Choose-reply', "Genre Successfully created");
+        }
+    });
+})
